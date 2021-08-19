@@ -1,0 +1,99 @@
+﻿<Window x:Class="dashboard.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:dashboard="clr-namespace:dashboard"
+        d:DataContext="{d:DesignInstance Type=dashboard:CountsViewModel}"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="768" Width="1024"
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        Background="Black">
+    <Window.Resources>
+        <ControlTemplate x:Name="StationStateTemplate" x:Key="stationState">
+            <!--<Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                
+            </Grid>-->
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="{TemplateBinding Name}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Franklin Gothic" FontStyle="Italic" FontSize="25" />
+                <!--<Rectangle x:Name="Color" Fill="{TemplateBinding Background}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  />-->
+                <Border BorderThickness="40" BorderBrush="{TemplateBinding Background}" />
+            </StackPanel>
+        </ControlTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="4*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="5*"/>
+            </Grid.ColumnDefinitions>
+            <Image Source="/logo.png" Grid.Column="1" HorizontalAlignment="Stretch" Visibility="Visible" ></Image>
+            <TextBlock Grid.Row="0" Grid.Column="3"  Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Franklin Gothic Heavy"  FontSize="50" FontWeight="Normal" TextWrapping="NoWrap" TextTrimming="None" LineStackingStrategy="MaxHeight">LARGE FOUNDATION</TextBlock>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="3*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 0 15 0" FontFamily="Franklin Gothic Heavy" FontStretch="Expanded" FontSize="40">PLAN:</TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="3" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 0 15 0" FontFamily="Franklin Gothic Heavy" FontStretch="Expanded" FontSize="40">TAKT TIME:</TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="0" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 0 15 0" FontFamily="Franklin Gothic Heavy" FontStretch="Expanded" FontSize="40">REAL:</TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="3"  Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 0 15 0" FontFamily="Franklin Gothic Heavy" FontStretch="Expanded" FontSize="40" TextAlignment="Center">TIEMPO <LineBreak /> TOTAL DE PARO:</TextBlock>
+
+            <TextBlock Grid.Row="0" Grid.Column="1"  Foreground="OrangeRed" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0" FontFamily="Franklin Gothic" FontWeight="Bold" FontStyle="Italic" FontStretch="Expanded" FontSize="40" Text="{Binding Plan, Mode=OneWay}"></TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="4"  Foreground="OrangeRed" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0" FontFamily="Franklin Gothic" FontWeight="Bold" FontStyle="Italic" FontStretch="Expanded" FontSize="40" Text="{Binding TaktTime, Mode=OneWay}"></TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="1"  Foreground="OrangeRed" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0" FontFamily="Franklin Gothic" FontWeight="Bold" FontStyle="Italic" FontStretch="Expanded" FontSize="40" Text="{Binding Real, Mode=OneWay}"></TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="4"  Foreground="OrangeRed" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0" FontFamily="Franklin Gothic" FontWeight="Bold" FontStyle="Italic" FontStretch="Expanded" FontSize="40" Text="{Binding TotalStopTime, Mode=OneWay}"></TextBlock>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"  Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Franklin Gothic Heavy"  FontSize="33" FontWeight="Normal" TextWrapping="NoWrap" TextTrimming="None" LineStackingStrategy="MaxHeight">ESTADO DE ESTACIONES</TextBlock>
+            <TextBlock Grid.Row="1"  Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontFamily="Franklin Gothic "  FontSize="33" FontWeight="Normal" TextWrapping="NoWrap" TextTrimming="None" LineStackingStrategy="MaxHeight">
+                <Span>Tiempo de paro: </Span> <TextBlock Foreground="OrangeRed" FontStyle="Italic">00:00:00</TextBlock>
+            </TextBlock>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel x:Name="StationStatePanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type StackPanel}">
+                            <Setter Property="Margin" Value="10 0 0 0" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <!--<Control Template="{StaticResource ResourceKey=stationState}" Name="E1" Background="OrangeRed" />-->
+                    <!--<Control Template="{StaticResource ResourceKey=stationState}" Name="E2" Background="OrangeRed" />-->
+                    <!--<DataGrid Template="{StaticResource stationState}" Name="E2" Background="Green" />
+                    <DataGrid Template="{StaticResource stationState}" Name="E3" Background="OrangeRed" />-->
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
