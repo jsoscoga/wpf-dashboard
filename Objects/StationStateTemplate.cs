@@ -30,7 +30,7 @@ namespace dashboard.Objects
             panel.Children.Add(new Border()
             {
                 BorderBrush = GetColorBrush(color),
-                BorderThickness = new Thickness(40)
+                BorderThickness = new Thickness(50, 80, 50, 80)
             });
         }
 
