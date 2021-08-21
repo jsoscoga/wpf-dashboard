@@ -75,7 +75,7 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0"  Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Franklin Gothic Heavy"  FontSize="33" FontWeight="Normal" TextWrapping="NoWrap" TextTrimming="None" LineStackingStrategy="MaxHeight">ESTADO DE ESTACIONES</TextBlock>
             <TextBlock Grid.Row="1"  Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Franklin Gothic "  FontSize="33" FontWeight="Normal" TextWrapping="NoWrap" TextTrimming="None" LineStackingStrategy="MaxHeight">
-                <Span>Tiempo de paro: </Span> <TextBlock Foreground="OrangeRed" FontStyle="Italic">00:00:00</TextBlock>
+                <Span>Tiempo de paro: </Span> <TextBlock x:Name="StationStopTime" Foreground="OrangeRed" FontStyle="Italic">00:00:00</TextBlock>
             </TextBlock>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>

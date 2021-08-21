@@ -1,6 +1,7 @@
 ﻿using dashboard.Model;
 using dashboard.Objects;
 using dashboard.Service;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,18 +28,18 @@ namespace dashboard
         private StationStateService stationStateService;
         private readonly StationState[] stationStates;
 
-        public MainWindow()
+        public MainWindow(StationStateService stationStateService)
         {
             InitializeComponent();
             countsViewModel = new CountsViewModel();
-            stationStateService = new StationStateService();
+            //stationStateService = new StationStateService();
             stationStates = stationStateService.GetStationStates();
             foreach(var stationState in stationStates)
             {
-                StationStatePanel.Children.Add((new StationStateTemplate(stationState.Station, stationState.Color)).panel);
+                StationStatePanel.Children.Add(new StationStateTemplate(stationState.Station, stationState.Color).panel);
             }
-            //StationStatePanel.Children.Add(new TextBlock() { Text = "E1", Foreground = Brushes.White, FontSize = 25 });
-            
+            //StationStopTime.Text = _config.GetConnectionString("uno");
+
             DataContext = countsViewModel;
         }
     }
