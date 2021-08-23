@@ -23,7 +23,7 @@ namespace dashboard
                 }
             }
         }
-        public int TaktTime
+        public DateTime TaktTime
         {
             get { return counts.TaktTime; }
             set
@@ -46,7 +46,7 @@ namespace dashboard
                 }
             }
         }
-        public int TotalStopTime { 
+        public DateTime TotalStopTime { 
             get { return counts.TotalStopTime; }
             set
             {
@@ -58,14 +58,28 @@ namespace dashboard
             }
         }
 
+        public DateTime StationsStopTime
+        {
+            get { return counts.StationsStopTime; }
+            set
+            {
+                if (counts.StationsStopTime != value)
+                {
+                    counts.StationsStopTime = value;
+                    OnPropertyChange("TotalStopTime");
+                }
+            }
+        }
+
         public CountsViewModel()
         {
             counts = new Counts
             {
                 Plan = 0,
-                TaktTime = 0,
+                TaktTime = new DateTime(0),
                 Real = 0,
-                TotalStopTime = 0
+                TotalStopTime = new DateTime(0),
+                StationsStopTime = new DateTime(0)
             };
         }
 

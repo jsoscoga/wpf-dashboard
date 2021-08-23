@@ -22,12 +22,12 @@ namespace dashboard
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            var serviceCollection = new ServiceCollection();
+            ServiceCollection serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
 
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
-            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+            MainWindow mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
         }
 
@@ -43,6 +43,7 @@ namespace dashboard
 
             services.AddTransient<MainWindow>();
             services.AddTransient<StationStateService>();
+            services.AddTransient<OrderService>();
         }
     }
 }
