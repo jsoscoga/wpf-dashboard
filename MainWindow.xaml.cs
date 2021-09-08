@@ -25,9 +25,12 @@ namespace dashboard
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly CountsViewModel countsViewModel;
+        private readonly OrderService _orderService;
         private readonly StationState[] stationStates;
         private readonly Timer intervalUpdate;
+        private readonly decimal minutesSchedule = 516;
+
+        private CountsViewModel countsViewModel = null;
 
         public MainWindow(StationStateService stationStateService, OrderService orderService)
         {
@@ -38,19 +41,14 @@ namespace dashboard
             {
                 StationStatePanel.Children.Add(new StationStateTemplate(stationState.Station, stationState.Color).panel);
             }
-            var order = orderService.GetFirst(2038);
-            countsViewModel = new CountsViewModel()
-            {
-                Plan = order.OrderState,
-                Real = order.SlaveId,
-                TaktTime = new DateTime(new TimeSpan(order.TargetEndTime.Hour - order.TargetBeginTime.Hour, order.TargetEndTime.Minute - order.TargetBeginTime.Minute, order.TargetEndTime.Second - order.TargetBeginTime.Second).Ticks),
-                TotalStopTime = new DateTime(new TimeSpan(order.RealEndTime.Hour - order.RealBeginTime.Hour, order.RealEndTime.Minute - order.RealBeginTime.Minute, order.RealEndTime.Second - order.RealBeginTime.Second).Ticks),
-                StationsStopTime = new DateTime(new TimeSpan(order.TargetEndTime.Hour, order.TargetEndTime.Minute, order.TargetEndTime.Second).Ticks)
-            };
+            _orderService = orderService;
+            //var order = orderService.GetFirst(2038);
+            var order = orderService.GetActualOrder();
+            UpdatingCountsViewModel(order);
 
             intervalUpdate = new Timer()
             {
-                Interval = 1000,
+                Interval = 5000,
                 Enabled = true,
                 AutoReset = true
             };
@@ -61,11 +59,21 @@ namespace dashboard
 
         private void OnIntervalElapsed(Object source, ElapsedEventArgs e)
         {
-            countsViewModel.Plan++;
-            countsViewModel.Real++;
-            countsViewModel.StationsStopTime = countsViewModel.StationsStopTime.AddSeconds(1);
-            countsViewModel.TaktTime = countsViewModel.TaktTime.AddSeconds(1);
-            countsViewModel.TotalStopTime = countsViewModel.TotalStopTime.AddSeconds(1);
+            UpdatingCountsViewModel(_orderService.GetActualOrder());
+        }
+
+        private void UpdatingCountsViewModel(Order order)
+        {
+            if (countsViewModel == null)
+            {
+                countsViewModel = new CountsViewModel();
+            }
+            countsViewModel.Plan = order.TargetAmount;
+            countsViewModel.Real = order.RealSignals;
+            //countsViewModel.TaktTime = new DateTime(new TimeSpan(order.TargetEndTime.Hour - order.TargetBeginTime.Hour, order.TargetEndTime.Minute - order.TargetBeginTime.Minute, order.TargetEndTime.Second - order.TargetBeginTime.Second).Ticks);
+            countsViewModel.TaktTime = new DateTime(new TimeSpan(0, 0, (int)(minutesSchedule / countsViewModel.Plan * 60)).Ticks);
+            countsViewModel.TotalStopTime = new DateTime(new TimeSpan(order.RealEndTime.Hour - order.RealBeginTime.Hour, order.RealEndTime.Minute - order.RealBeginTime.Minute, order.RealEndTime.Second - order.RealBeginTime.Second).Ticks);
+            countsViewModel.StationsStopTime = new DateTime(new TimeSpan(order.TargetEndTime.Hour, order.TargetEndTime.Minute, order.TargetEndTime.Second).Ticks);
         }
     }
 }

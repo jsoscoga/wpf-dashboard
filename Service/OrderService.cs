@@ -32,5 +32,21 @@ namespace dashboard.Service
 
             return order;
         }
+
+        public Order GetActualOrder()
+        {
+            string query = @"SELECT id,reference,description,slaveId,orderState,piecesPerSignal,timePerSignal,
+                            targetBeginTime,targetEndTime,targetAmount,targetSetupTime,realBeginTime,realEndTime,realSignals,autoStopTime 
+                            FROM [WERMAWIN].[dbo].[order]
+                            where FORMAT(targetBeginTime, 'yyyy-MM-dd') = @actualDate";
+            Order order;
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                order = connection.QueryFirstOrDefault<Order>(query, new { actualDate = DateTime.Now.ToString("yyyy-MM-dd") });
+            }
+
+            return order;
+        }
     }
 }

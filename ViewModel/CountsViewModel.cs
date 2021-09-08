@@ -12,7 +12,7 @@ namespace dashboard
 
         private Counts counts;
 
-        public int Plan { 
+        public decimal Plan { 
             get { return counts.Plan; }
             set
             {
@@ -35,7 +35,7 @@ namespace dashboard
                 }
             }
         }
-        public int Real { 
+        public decimal Real { 
             get { return counts.Real; }
             set
             {
