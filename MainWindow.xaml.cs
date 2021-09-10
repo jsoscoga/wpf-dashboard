@@ -26,26 +26,33 @@ namespace dashboard
     public partial class MainWindow : Window
     {
         private readonly OrderService _orderService;
+        private readonly StationStateService _stationStateService;
         private readonly StationState[] stationStates;
         private readonly Timer intervalUpdate;
         private readonly decimal minutesSchedule = 516;
 
-        private CountsViewModel countsViewModel = null;
+        private CountsViewModel countsViewModel = new CountsViewModel();
 
         public MainWindow(StationStateService stationStateService, OrderService orderService)
         {
             InitializeComponent();
-            //stationStateService = new StationStateService();
-            stationStates = stationStateService.GetStationStates();
+            _stationStateService = stationStateService;
+            _orderService = orderService;
+
+            stationStates = stationStateService.GetDummyStationStates();
             foreach(var stationState in stationStates)
             {
                 StationStatePanel.Children.Add(new StationStateTemplate(stationState.Station, stationState.Color).panel);
             }
-            _orderService = orderService;
             //var order = orderService.GetFirst(2038);
-            var order = orderService.GetActualOrder();
-            UpdatingCountsViewModel(order);
+            if (_orderService.OrderExists())
+            {
+                var order = _orderService.GetActualOrder();
+                UpdatingCountsViewModel(order);
+                DataContext = countsViewModel;
+            }
 
+            // Interval of 30 seg is mandatory
             intervalUpdate = new Timer()
             {
                 Interval = 5000,
@@ -53,21 +60,22 @@ namespace dashboard
                 AutoReset = true
             };
             intervalUpdate.Elapsed += OnIntervalElapsed;
-            
-            DataContext = countsViewModel;
         }
 
         private void OnIntervalElapsed(Object source, ElapsedEventArgs e)
         {
-            UpdatingCountsViewModel(_orderService.GetActualOrder());
+            if (_orderService.OrderExists())
+            {
+                UpdatingCountsViewModel(_orderService.GetActualOrder());
+            }
         }
 
         private void UpdatingCountsViewModel(Order order)
         {
-            if (countsViewModel == null)
-            {
-                countsViewModel = new CountsViewModel();
-            }
+            //if (countsViewModel == null)
+            //{
+            //    countsViewModel = new CountsViewModel();
+            //}
             countsViewModel.Plan = order.TargetAmount;
             countsViewModel.Real = order.RealSignals;
             //countsViewModel.TaktTime = new DateTime(new TimeSpan(order.TargetEndTime.Hour - order.TargetBeginTime.Hour, order.TargetEndTime.Minute - order.TargetBeginTime.Minute, order.TargetEndTime.Second - order.TargetBeginTime.Second).Ticks);

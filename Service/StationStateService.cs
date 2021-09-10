@@ -7,7 +7,7 @@ namespace dashboard.Service
 {
     public class StationStateService
     {
-        public StationState[] GetStationStates()
+        public StationState[] GetDummyStationStates()
         {
             StationState[] stationStates = new StationState[]
             {
