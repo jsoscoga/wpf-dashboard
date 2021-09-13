@@ -26,29 +26,36 @@ namespace dashboard
     public partial class MainWindow : Window
     {
         private readonly OrderService _orderService;
+        private readonly SlaveDataService _slaveDataService;
         private readonly StationStateService _stationStateService;
-        private readonly StationState[] stationStates;
-        private readonly Timer intervalUpdate;
-        private readonly decimal minutesSchedule = 516;
+
+        private StationState[] stationStates;
+        private Timer intervalUpdate;
+        private const decimal minutesSchedule = 516;
 
         private CountsViewModel countsViewModel = new CountsViewModel();
 
-        public MainWindow(StationStateService stationStateService, OrderService orderService)
+        public MainWindow(StationStateService stationStateService, OrderService orderService, SlaveDataService slaveDataService)
         {
             InitializeComponent();
             _stationStateService = stationStateService;
             _orderService = orderService;
+            _slaveDataService = slaveDataService;
 
-            stationStates = stationStateService.GetDummyStationStates();
-            foreach(var stationState in stationStates)
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            stationStates = _stationStateService.GetDummyStationStates();
+            foreach (var stationState in stationStates)
             {
                 StationStatePanel.Children.Add(new StationStateTemplate(stationState.Station, stationState.Color).panel);
             }
             //var order = orderService.GetFirst(2038);
             if (_orderService.OrderExists())
             {
-                var order = _orderService.GetActualOrder();
-                UpdatingCountsViewModel(order);
+                UpdatingCountsViewModel();
                 DataContext = countsViewModel;
             }
 
@@ -66,21 +73,26 @@ namespace dashboard
         {
             if (_orderService.OrderExists())
             {
-                UpdatingCountsViewModel(_orderService.GetActualOrder());
+                UpdatingCountsViewModel();
             }
         }
 
-        private void UpdatingCountsViewModel(Order order)
+        private void UpdatingCountsViewModel()
         {
             //if (countsViewModel == null)
             //{
             //    countsViewModel = new CountsViewModel();
             //}
+            var order = _orderService.GetActualOrder();
             countsViewModel.Plan = order.TargetAmount;
             countsViewModel.Real = order.RealSignals;
-            //countsViewModel.TaktTime = new DateTime(new TimeSpan(order.TargetEndTime.Hour - order.TargetBeginTime.Hour, order.TargetEndTime.Minute - order.TargetBeginTime.Minute, order.TargetEndTime.Second - order.TargetBeginTime.Second).Ticks);
             countsViewModel.TaktTime = new DateTime(new TimeSpan(0, 0, (int)(minutesSchedule / countsViewModel.Plan * 60)).Ticks);
-            countsViewModel.TotalStopTime = new DateTime(new TimeSpan(order.RealEndTime.Hour - order.RealBeginTime.Hour, order.RealEndTime.Minute - order.RealBeginTime.Minute, order.RealEndTime.Second - order.RealBeginTime.Second).Ticks);
+
+            var slaveData = _slaveDataService.GetByActualDate();
+            int totalDuration = _slaveDataService.GetDurationSum(slaveData);
+            countsViewModel.TotalStopTime = new DateTime(new TimeSpan(0, 0, totalDuration).Ticks);
+
+
             countsViewModel.StationsStopTime = new DateTime(new TimeSpan(order.TargetEndTime.Hour, order.TargetEndTime.Minute, order.TargetEndTime.Second).Ticks);
         }
     }

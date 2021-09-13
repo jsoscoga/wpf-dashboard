@@ -9,12 +9,10 @@ using System.Text;
 
 namespace dashboard.Service
 {
-    public class OrderService
+    public class OrderService : WermawinService
     {
-        private string connectionString;
-        public OrderService(IConfiguration Configuration)
+        public OrderService(IConfiguration Configuration) : base(Configuration)
         {
-            connectionString = Configuration.GetConnectionString("uno");
         }
 
         public Order GetFirst(int id)

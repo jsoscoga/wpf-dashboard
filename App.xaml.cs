@@ -1,5 +1,4 @@
-﻿using dashboard.Service;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -41,9 +40,7 @@ namespace dashboard
 
             services.AddSingleton(Configuration);
 
-            services.AddTransient<MainWindow>();
-            services.AddTransient<StationStateService>();
-            services.AddTransient<OrderService>();
+            services.AddInfrastructure();
         }
     }
 }
