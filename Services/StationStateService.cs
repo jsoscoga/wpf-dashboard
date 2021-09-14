@@ -45,10 +45,12 @@ namespace dashboard.Service
                 stationStates.Add(new StationState()
                 {
                     Station = slave.ToString(),
-                    //Color = "Blue"
                     StopTime = new DateTime(timeDiff.Ticks),
                     DateEnd = actualState.DatEnd,
-                    Closed = closedState
+                    Closed = closedState,
+                    BottomVisibility = !closedState && actualState.Channel1 > 0,
+                    CenterVisibility = !closedState && actualState.Channel2 > 0,
+                    TopVisibility = !closedState && actualState.Channel3 > 0
                 });
             }
 

@@ -32,6 +32,7 @@ namespace dashboard
         private StationState[] stationStates;
         private Timer intervalUpdate;
         private const decimal MINUTESSCHEDULE = 516;
+        // Interval of 30 seg is mandatory
         private const int SECONDSFORINTERVAL = 5;
 
         private CountsViewModel countsViewModel = new CountsViewModel();
@@ -48,19 +49,12 @@ namespace dashboard
 
         private void Initialize()
         {
-            //stationStates = _stationStateService.GetDummyStationStates();
-            //foreach (var stationState in stationStates)
-            //{
-            //    StationStatePanel.Children.Add(new StationStateTemplate(stationState.Station, stationState.Color).panel);
-            //}
-            //var order = orderService.GetFirst(2038);
             if (_orderService.OrderExists())
             {
                 UpdatingCountsViewModel();
                 DataContext = countsViewModel;
             }
 
-            // Interval of 30 seg is mandatory
             intervalUpdate = new Timer()
             {
                 Interval = SECONDSFORINTERVAL * 1000,
@@ -81,6 +75,7 @@ namespace dashboard
         private void UpdatingCountsViewModel()
         {
             Dispatcher.Invoke(() => UpdatingText.Visibility = Visibility.Visible);
+
             var order = _orderService.GetActualOrder();
             countsViewModel.Plan = order.TargetAmount;
             countsViewModel.Real = order.RealSignals;
@@ -91,12 +86,18 @@ namespace dashboard
             countsViewModel.TotalStopTime = new DateTime(new TimeSpan(0, 0, totalDuration).Ticks);
 
             var stationStates = _stationStateService.GetFromSlaveData(slaveData);
-            countsViewModel.StationsStopTime = stationStates.OrderBy(sD => sD.DateEnd).First(sD => !sD.Closed).StopTime;
-            Dispatcher.Invoke(() => StationStatePanel.Children.Clear());
-            foreach (var stationState in stationStates)
+            if (stationStates.Count > 0)
             {
-                Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateTemplate(stationState.Station).panel));
+                //countsViewModel.StationsStopTime = stationStates.OrderBy(sD => sD.DateEnd).First(sD => !sD.Closed).StopTime;
+                countsViewModel.StationStates = stationStates;
             }
+            
+            //Dispatcher.Invoke(() => StationStatePanel.Children.Clear());
+            //foreach (var stationState in stationStates)
+            //{
+            //    Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateTemplate(stationState.Station).panel));
+            //}
+
             Dispatcher.Invoke(() => UpdatingText.Visibility = Visibility.Hidden);
         }
     }

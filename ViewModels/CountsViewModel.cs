@@ -12,6 +12,8 @@ namespace dashboard
 
         private Counts counts;
 
+        private List<StationState> stationStates;
+
         public decimal Plan { 
             get { return counts.Plan; }
             set
@@ -66,7 +68,19 @@ namespace dashboard
                 if (counts.StationsStopTime != value)
                 {
                     counts.StationsStopTime = value;
-                    OnPropertyChange("TotalStopTime");
+                    OnPropertyChange("StationsStopTime");
+                }
+            }
+        }
+
+        public List<StationState> StationStates 
+        { 
+            get => stationStates;
+            set {
+                if (stationStates != value)
+                {
+                    stationStates = value;
+                    OnPropertyChange("stationStates");
                 }
             }
         }
