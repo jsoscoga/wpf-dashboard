@@ -8,6 +8,7 @@ namespace dashboard.Model
     {
         public string Station { get; set; }
         public DateTime StopTime { get; set; }
+        public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
         public bool Closed { get; set; }
         public bool TopVisibility { get; set; }

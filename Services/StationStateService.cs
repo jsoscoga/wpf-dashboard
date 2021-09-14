@@ -46,6 +46,7 @@ namespace dashboard.Service
                 {
                     Station = slave.ToString(),
                     StopTime = new DateTime(timeDiff.Ticks),
+                    DateStart = firstState.DatStart,
                     DateEnd = actualState.DatEnd,
                     Closed = closedState,
                     BottomVisibility = !closedState && actualState.Channel1 > 0,

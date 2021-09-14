@@ -1,6 +1,7 @@
 ﻿using dashboard.Model;
 using dashboard.Objects;
 using dashboard.Service;
+using dashboard.Views;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -40,14 +41,15 @@ namespace dashboard
         public MainWindow(StationStateService stationStateService, OrderService orderService, SlaveDataService slaveDataService)
         {
             InitializeComponent();
+
             _stationStateService = stationStateService;
             _orderService = orderService;
             _slaveDataService = slaveDataService;
 
-            Initialize();
+            InitializeData();
         }
 
-        private void Initialize()
+        private void InitializeData()
         {
             if (_orderService.OrderExists())
             {
@@ -88,15 +90,19 @@ namespace dashboard
             var stationStates = _stationStateService.GetFromSlaveData(slaveData);
             if (stationStates.Count > 0)
             {
-                //countsViewModel.StationsStopTime = stationStates.OrderBy(sD => sD.DateEnd).First(sD => !sD.Closed).StopTime;
-                countsViewModel.StationStates = stationStates;
+                if (stationStates.Any(sD => !sD.Closed))
+                {
+                    countsViewModel.StationsStopTime = new DateTime(stationStates.OrderBy(sD => sD.DateEnd).Where(sD => !sD.Closed).Sum(sD => sD.StopTime.Ticks));
+                }
+                Dispatcher.Invoke(() => StationStatePanel.Children.Clear());
+                //countsViewModel.StationStates = stationStates;
+                foreach (var stationState in stationStates)
+                {
+                    //Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateTemplate(stationState.Station).panel));
+                    Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateView(stationState.Station, stationState.TopVisibility, stationState.CenterVisibility, stationState.BottomVisibility)));
+                }
             }
             
-            //Dispatcher.Invoke(() => StationStatePanel.Children.Clear());
-            //foreach (var stationState in stationStates)
-            //{
-            //    Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateTemplate(stationState.Station).panel));
-            //}
 
             Dispatcher.Invoke(() => UpdatingText.Visibility = Visibility.Hidden);
         }

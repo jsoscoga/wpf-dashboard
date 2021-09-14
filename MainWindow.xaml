@@ -4,28 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:dashboard="clr-namespace:dashboard"
+        xmlns:loc="clr-namespace:dashboard.Model"
         d:DataContext="{d:DesignInstance Type=dashboard:CountsViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="768" Width="1024"
         WindowStartupLocation="CenterScreen" WindowState="Maximized"
         Background="Black">
-    <Window.Resources>
-        <ControlTemplate x:Name="StationStateTemplate" x:Key="stationState">
-            <!--<Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="2*"/>
-                </Grid.RowDefinitions>
-                
-            </Grid>-->
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="{TemplateBinding Name}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Franklin Gothic" FontStyle="Italic" FontSize="25" />
-                <!--<Rectangle x:Name="Color" Fill="{TemplateBinding Background}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  />-->
-                <!--<Border BorderThickness="50" BorderBrush="{TemplateBinding Background}" VerticalAlignment="Center" />-->
-                <Frame BorderThickness="50 80 50 80" BorderBrush="OrangeRed" />
-            </StackPanel>
-        </ControlTemplate>
-    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1.1*"/>
@@ -76,7 +60,7 @@
             <TextBlock Grid.Row="0"  Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Franklin Gothic Heavy"  FontSize="33" FontWeight="Normal" TextWrapping="NoWrap" TextTrimming="None" LineStackingStrategy="MaxHeight">ESTADO DE ESTACIONES</TextBlock>
             <TextBlock Grid.Row="1"  Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Franklin Gothic "  FontSize="33" FontWeight="Normal" TextWrapping="NoWrap" TextTrimming="None" LineStackingStrategy="MaxHeight">
                 <Span>Tiempo de paro: </Span>
-                <TextBlock Text="{Binding TaktTime, StringFormat='HH:mm:ss', Mode=OneWay}" Foreground="OrangeRed" FontStyle="Italic"></TextBlock>
+                <TextBlock Text="{Binding StationsStopTime, StringFormat='HH:mm:ss', Mode=OneWay}" Foreground="OrangeRed" FontStyle="Italic"></TextBlock>
             </TextBlock>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
@@ -85,17 +69,9 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel x:Name="StationStatePanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
-                    <StackPanel.Resources>
-                        <Style TargetType="{x:Type StackPanel}">
-                            <Setter Property="Margin" Value="10 0 0 0" />
-                        </Style>
-                    </StackPanel.Resources>
-                    <!--<Control Template="{StaticResource ResourceKey=stationState}" Name="E1" Background="OrangeRed" />-->
-                    <!--<Control Template="{StaticResource ResourceKey=stationState}" Name="E2" Background="OrangeRed" />-->
-                    <!--<DataGrid Template="{StaticResource stationState}" Name="E2" Background="Green" />
-                    <DataGrid Template="{StaticResource stationState}" Name="E3" Background="OrangeRed" />-->
                 </StackPanel>
             </Grid>
+            <TextBlock Grid.Row="3" x:Name="UpdatingText" Visibility="Hidden" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Franklin Gothic"  FontSize="15" FontWeight="Normal" TextWrapping="NoWrap" TextTrimming="None" LineStackingStrategy="MaxHeight">Actualizando...</TextBlock>
         </Grid>
     </Grid>
 </Window>
