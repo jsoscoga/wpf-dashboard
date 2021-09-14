@@ -20,7 +20,6 @@ namespace dashboard.Service
             string query = @"SELECT id,slaveId,datStart,datEnd,duration,channel1,channel2,channel3,channel4,error
 	            FROM dbo.slaveData 
 	            where datStart between @actualDate and @nextDate
-                and CONCAT(channel1, channel2, channel3) != '000'
 	            ORDER BY slaveId, datStart";
 
             using (var connection = new SqlConnection(connectionString))
@@ -30,6 +29,6 @@ namespace dashboard.Service
             }
         }
 
-        public int GetDurationSum(IEnumerable<SlaveData> slaveData) => slaveData.Sum(sD => sD.Duration);
+        public int GetDurationSum(IEnumerable<SlaveData> slaveData) => slaveData.Where(sD => !string.Concat(sD.Channel1, sD.Channel2, sD.Channel3).Equals("000")).Sum(sD => sD.Duration);
     }
 }

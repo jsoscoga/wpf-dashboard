@@ -31,7 +31,8 @@ namespace dashboard
 
         private StationState[] stationStates;
         private Timer intervalUpdate;
-        private const decimal minutesSchedule = 516;
+        private const decimal MINUTESSCHEDULE = 516;
+        private const int SECONDSFORINTERVAL = 5;
 
         private CountsViewModel countsViewModel = new CountsViewModel();
 
@@ -47,11 +48,11 @@ namespace dashboard
 
         private void Initialize()
         {
-            stationStates = _stationStateService.GetDummyStationStates();
-            foreach (var stationState in stationStates)
-            {
-                StationStatePanel.Children.Add(new StationStateTemplate(stationState.Station, stationState.Color).panel);
-            }
+            //stationStates = _stationStateService.GetDummyStationStates();
+            //foreach (var stationState in stationStates)
+            //{
+            //    StationStatePanel.Children.Add(new StationStateTemplate(stationState.Station, stationState.Color).panel);
+            //}
             //var order = orderService.GetFirst(2038);
             if (_orderService.OrderExists())
             {
@@ -62,7 +63,7 @@ namespace dashboard
             // Interval of 30 seg is mandatory
             intervalUpdate = new Timer()
             {
-                Interval = 5000,
+                Interval = SECONDSFORINTERVAL * 1000,
                 Enabled = true,
                 AutoReset = true
             };
@@ -79,21 +80,24 @@ namespace dashboard
 
         private void UpdatingCountsViewModel()
         {
-            //if (countsViewModel == null)
-            //{
-            //    countsViewModel = new CountsViewModel();
-            //}
+            Dispatcher.Invoke(() => UpdatingText.Visibility = Visibility.Visible);
             var order = _orderService.GetActualOrder();
             countsViewModel.Plan = order.TargetAmount;
             countsViewModel.Real = order.RealSignals;
-            countsViewModel.TaktTime = new DateTime(new TimeSpan(0, 0, (int)(minutesSchedule / countsViewModel.Plan * 60)).Ticks);
+            countsViewModel.TaktTime = new DateTime(new TimeSpan(0, 0, (int)(MINUTESSCHEDULE / countsViewModel.Plan * 60)).Ticks);
 
             var slaveData = _slaveDataService.GetByActualDate();
             int totalDuration = _slaveDataService.GetDurationSum(slaveData);
             countsViewModel.TotalStopTime = new DateTime(new TimeSpan(0, 0, totalDuration).Ticks);
 
-
-            countsViewModel.StationsStopTime = new DateTime(new TimeSpan(order.TargetEndTime.Hour, order.TargetEndTime.Minute, order.TargetEndTime.Second).Ticks);
+            var stationStates = _stationStateService.GetFromSlaveData(slaveData);
+            countsViewModel.StationsStopTime = stationStates.OrderBy(sD => sD.DateEnd).First(sD => !sD.Closed).StopTime;
+            Dispatcher.Invoke(() => StationStatePanel.Children.Clear());
+            foreach (var stationState in stationStates)
+            {
+                Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateTemplate(stationState.Station).panel));
+            }
+            Dispatcher.Invoke(() => UpdatingText.Visibility = Visibility.Hidden);
         }
     }
 }

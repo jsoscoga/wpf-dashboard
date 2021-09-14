@@ -12,13 +12,13 @@ namespace dashboard.Objects
         public StackPanel panel;
         private TextBlock station;
         private Border color;
-        public StationStateTemplate(string name, string color)
+        public StationStateTemplate(string name)
         {
             CreatePanel();
-            CreateObjectsInPanel(name, color);
+            CreateObjectsInPanel(name);
         }
 
-        private void CreateObjectsInPanel(string name, string color)
+        private void CreateObjectsInPanel(string name)
         {
             panel.Children.Add(new TextBlock()
             {
@@ -29,7 +29,7 @@ namespace dashboard.Objects
             });
             panel.Children.Add(new Border()
             {
-                BorderBrush = GetColorBrush(color),
+                //BorderBrush = (Brush) new BrushConverter().ConvertFrom(""),
                 BorderThickness = new Thickness(50, 80, 50, 80)
             });
         }
