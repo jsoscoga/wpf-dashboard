@@ -30,7 +30,6 @@ namespace dashboard
         private readonly SlaveDataService _slaveDataService;
         private readonly StationStateService _stationStateService;
 
-        private StationState[] stationStates;
         private Timer intervalUpdate;
         private const decimal MINUTESSCHEDULE = 516;
         // Interval of 30 seg is mandatory
@@ -95,10 +94,8 @@ namespace dashboard
                     countsViewModel.StationsStopTime = new DateTime(stationStates.OrderBy(sD => sD.DateEnd).Where(sD => !sD.Closed).Sum(sD => sD.StopTime.Ticks));
                 }
                 Dispatcher.Invoke(() => StationStatePanel.Children.Clear());
-                //countsViewModel.StationStates = stationStates;
                 foreach (var stationState in stationStates)
                 {
-                    //Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateTemplate(stationState.Station).panel));
                     Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateView(stationState.Station, stationState.TopVisibility, stationState.CenterVisibility, stationState.BottomVisibility)));
                 }
             }
