@@ -20,7 +20,8 @@ namespace dashboard.Service
             string query = @"SELECT id,slaveId,datStart,datEnd,duration,channel1,channel2,channel3,channel4,error
 	            FROM dbo.slaveData 
 	            where datStart between @actualDate and @nextDate
-	            ORDER BY slaveId, datStart";
+                and error = 0
+	            ORDER BY datStart";
 
             using (var connection = new SqlConnection(connectionString))
             {

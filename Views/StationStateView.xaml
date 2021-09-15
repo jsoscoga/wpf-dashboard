@@ -10,13 +10,17 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Border Grid.Column="0" Margin="10 0 0 0" BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Center">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="{Binding Station}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Franklin Gothic" FontStyle="Italic" FontSize="25" />
-                <Frame x:Name="FrameTop" BorderThickness="50 30 50 30" BorderBrush="Red" Visibility="{Binding TopVisibility}" />
-                <Frame x:Name="FrameCenter" BorderThickness="50 30 50 30" BorderBrush="Yellow" Visibility="{Binding CenterVisibility}" />
-                <Frame x:Name="FrameBottom" BorderThickness="50 30 50 30" BorderBrush="Blue" Visibility="{Binding BottomVisibility}" />
-            </StackPanel>
-        </Border>
+        <StackPanel Margin="10 0 0 0" Orientation="Vertical">
+            <TextBlock Text="{Binding Station}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Franklin Gothic" FontStyle="Italic" FontSize="25" />
+            <Border BorderBrush="PapayaWhip" BorderThickness="0.5">
+                <Frame x:Name="FrameTop" BorderThickness="50 30 50 35" BorderBrush="Red" Visibility="{Binding TopVisibility}" />
+            </Border>
+            <Border BorderBrush="PapayaWhip" BorderThickness="0.5">
+                <Frame x:Name="FrameCenter" BorderThickness="50 30 50 35" BorderBrush="Yellow" Visibility="{Binding CenterVisibility}" />
+            </Border>
+            <Border BorderBrush="PapayaWhip" BorderThickness="0.5">
+                <Frame x:Name="FrameBottom" BorderThickness="50 30 50 35" BorderBrush="Blue" Visibility="{Binding BottomVisibility}" />
+            </Border>
+        </StackPanel>
     </Grid>
 </UserControl>

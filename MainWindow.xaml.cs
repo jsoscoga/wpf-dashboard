@@ -1,5 +1,4 @@
 ﻿using dashboard.Model;
-using dashboard.Objects;
 using dashboard.Service;
 using dashboard.Views;
 using Microsoft.Extensions.Configuration;
@@ -33,7 +32,7 @@ namespace dashboard
         private Timer intervalUpdate;
         private const decimal MINUTESSCHEDULE = 516;
         // Interval of 30 seg is mandatory
-        private const int SECONDSFORINTERVAL = 5;
+        private const int SECONDSFORINTERVAL = 10;
 
         private CountsViewModel countsViewModel = new CountsViewModel();
 
@@ -91,12 +90,19 @@ namespace dashboard
             {
                 if (stationStates.Any(sD => !sD.Closed))
                 {
-                    countsViewModel.StationsStopTime = new DateTime(stationStates.OrderBy(sD => sD.DateEnd).Where(sD => !sD.Closed).Sum(sD => sD.StopTime.Ticks));
+                    var openStationStates = stationStates.Where(sD => !sD.Closed);
+                    DateTime dateStart = openStationStates.Min(sD => sD.DateStart);
+                    DateTime dateEnd = openStationStates.Max(sD => sD.DateEnd);
+                    TimeSpan timeDiff = dateEnd - dateStart;
+                    countsViewModel.StationsStopTime = new DateTime(timeDiff.Ticks);
                 }
                 Dispatcher.Invoke(() => StationStatePanel.Children.Clear());
                 foreach (var stationState in stationStates)
                 {
-                    Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateView(stationState.Station, stationState.TopVisibility, stationState.CenterVisibility, stationState.BottomVisibility)));
+                    if (!stationState.Closed)
+                    {
+                        Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateView(stationState.Station, stationState.TopVisibility, stationState.CenterVisibility, stationState.BottomVisibility)));
+                    }
                 }
             }
             
