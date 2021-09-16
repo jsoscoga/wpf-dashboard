@@ -33,7 +33,10 @@ namespace dashboard.Service
             {
                 var slaveDataList = slaveData.Where(sD => sD.SlaveId == slave && !string.Concat(sD.Channel1, sD.Channel2, sD.Channel3).Equals("000"))
                     .OrderBy(sD => sD.DatStart);
-                AddStationStates(slaveData, ref stationStates, slave, slaveDataList);
+                if (slaveDataList.Count() > 0)
+                {
+                    AddStationStates(slaveData, ref stationStates, slave, slaveDataList);
+                }
             }
 
             return stationStates;
