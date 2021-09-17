@@ -28,34 +28,35 @@ namespace dashboard.Service
         {
             List<StationState> stationStates = new List<StationState>();
 
-            var slaves = slaveData.OrderBy(sD => sD.SlaveId).Select(sD => sD.SlaveId).Distinct().ToArray();
-            foreach (int slave in slaves)
+            while (slaveData.Any(sD => !string.Concat(sD.Channel1, sD.Channel2, sD.Channel3).Equals("000")))
             {
-                var slaveDataList = slaveData.Where(sD => sD.SlaveId == slave && !string.Concat(sD.Channel1, sD.Channel2, sD.Channel3).Equals("000"))
-                    .OrderBy(sD => sD.DatStart);
-                if (slaveDataList.Count() > 0)
-                {
-                    AddStationStates(slaveData, ref stationStates, slave, slaveDataList);
-                }
+                AddStationStates(slaveData, ref stationStates);
+                var lastStationState = stationStates.Last();
+                var slaveDataToExclude = slaveData.Where(sD => sD.SlaveId == lastStationState.SlaveId &&
+                    sD.DatStart >= lastStationState.DateStart && sD.DatEnd <= lastStationState.DateEnd);
+                slaveData = slaveData.Except(slaveDataToExclude);
             }
 
             return stationStates;
         }
 
-        private static void AddStationStates(IEnumerable<SlaveData> slaveData, ref List<StationState> stationStates, int slave, IOrderedEnumerable<SlaveData> slaveDataList)
+        private static void AddStationStates(IEnumerable<SlaveData> slaveData, ref List<StationState> stationStates)
         {
-            var firstState = slaveDataList.First();
+            var firstState = slaveData.Where(sD => !string.Concat(sD.Channel1, sD.Channel2, sD.Channel3).Equals("000")).OrderBy(sD => sD.DatStart).First();
+            int slave = firstState.SlaveId;
             var actualState = firstState;
-            while (slaveDataList.Any(sD => sD.DatStart.Equals(actualState.DatEnd)))
+            while (slaveData.Any(sD => sD.SlaveId == slave && sD.DatStart.Equals(actualState.DatEnd) &&
+                !string.Concat(sD.Channel1, sD.Channel2, sD.Channel3).Equals("000")))
             {
-                actualState = slaveDataList.First(sD => sD.DatStart.Equals(actualState.DatEnd));
+                actualState = slaveData.First(sD => sD.SlaveId == slave && sD.DatStart.Equals(actualState.DatEnd));
             }
-
             var closedSlaveData = slaveData.FirstOrDefault(sD => sD.SlaveId == slave && sD.DatStart.Equals(actualState.DatEnd));
+
             bool closedState = closedSlaveData != null;
             stationStates.Add(new StationState()
             {
                 Station = slave.ToString(),
+                SlaveId = slave,
                 DateStart = firstState.DatStart,
                 DateEnd = actualState.DatEnd,
                 Closed = closedState,
@@ -63,16 +64,6 @@ namespace dashboard.Service
                 CenterVisibility = !closedState && actualState.Channel2 > 0,
                 TopVisibility = !closedState && actualState.Channel3 > 0
             });
-
-            if (closedSlaveData != null)
-            {
-                var newSlaveDataList = slaveData.Where(sD => sD.SlaveId == slave && !string.Concat(sD.Channel1, sD.Channel2, sD.Channel3).Equals("000") && sD.DatStart > closedSlaveData.DatStart)
-                    .OrderBy(sD => sD.DatStart);
-                if (newSlaveDataList.Count() > 0)
-                {
-                    AddStationStates(slaveData, ref stationStates, slave, newSlaveDataList);
-                }
-            }
         }
     }
 }

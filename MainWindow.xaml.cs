@@ -86,15 +86,17 @@ namespace dashboard
             countsViewModel.TotalStopTime = new DateTime(new TimeSpan(0, 0, totalDuration).Ticks);
 
             var stationStates = _stationStateService.GetFromSlaveData(slaveData);
-            if (stationStates.Count > 0)
+            if (stationStates.Any())
             {
                 if (stationStates.Any(sD => !sD.Closed))
                 {
-                    var openStationStates = stationStates.Where(sD => !sD.Closed);
-                    DateTime dateStart = openStationStates.Min(sD => sD.DateStart);
-                    DateTime dateEnd = openStationStates.Max(sD => sD.DateEnd);
+                    DateTime dateStart = stationStates.Min(sD => sD.DateStart);
+                    DateTime dateEnd = stationStates.Max(sD => sD.DateEnd);
                     TimeSpan timeDiff = dateEnd - dateStart;
                     countsViewModel.StationsStopTime = new DateTime(timeDiff.Ticks);
+                } else
+                {
+                    countsViewModel.StationsStopTime = new DateTime(0);
                 }
                 Dispatcher.Invoke(() => StationStatePanel.Children.Clear());
                 foreach (var stationState in stationStates)
