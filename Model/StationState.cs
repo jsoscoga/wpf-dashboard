@@ -6,6 +6,7 @@ namespace dashboard.Model
 {
     public class StationState
     {
+        public int Id { get; set; }
         public string Station { get; set; }
         public int SlaveId { get; set; }
         public DateTime DateStart { get; set; }
@@ -14,5 +15,6 @@ namespace dashboard.Model
         public bool TopVisibility { get; set; }
         public bool CenterVisibility { get; set; }
         public bool BottomVisibility { get; set; }
+        public IEnumerable<StationState> ScopesStations { get; set; }
     }
 }

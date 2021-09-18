@@ -88,26 +88,29 @@ namespace dashboard
             var stationStates = _stationStateService.GetFromSlaveData(slaveData);
             if (stationStates.Any())
             {
-                if (stationStates.Any(sD => !sD.Closed))
+                IEnumerable<ScheduleStations> schedules = new List<ScheduleStations>();
+                _stationStateService.InspectStationStates(ref stationStates, ref schedules);
+                Dispatcher.Invoke(() => StationStatePanel.Children.Clear());
+                if (schedules.Any(sD => !sD.Closed))
                 {
-                    DateTime dateStart = stationStates.Min(sD => sD.DateStart);
-                    DateTime dateEnd = stationStates.Max(sD => sD.DateEnd);
+                    var openStationStates = schedules.First(s => !s.Closed).StationStates;
+                    DateTime dateStart = openStationStates.Min(sD => sD.DateStart);
+                    DateTime dateEnd = openStationStates.Max(sD => sD.DateEnd);
                     TimeSpan timeDiff = dateEnd - dateStart;
                     countsViewModel.StationsStopTime = new DateTime(timeDiff.Ticks);
+
+                    foreach (var stationState in openStationStates)
+                    {
+                        if (!stationState.Closed)
+                        {
+                            Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateView(stationState.Station, stationState.TopVisibility, stationState.CenterVisibility, stationState.BottomVisibility)));
+                        }
+                    }
                 } else
                 {
                     countsViewModel.StationsStopTime = new DateTime(0);
                 }
-                Dispatcher.Invoke(() => StationStatePanel.Children.Clear());
-                foreach (var stationState in stationStates)
-                {
-                    if (!stationState.Closed)
-                    {
-                        Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateView(stationState.Station, stationState.TopVisibility, stationState.CenterVisibility, stationState.BottomVisibility)));
-                    }
-                }
             }
-            
 
             Dispatcher.Invoke(() => UpdatingText.Visibility = Visibility.Hidden);
         }
