@@ -6,8 +6,8 @@ namespace dashboard.Model
 {
     public class ScheduleStations
     {
-        public IEnumerable<StationStatus> StationStates { get; set; }
-        public IEnumerable<int> IdStationStates { get; set; }
+        public IEnumerable<StationStatus> StationStatuses { get; set; }
+        public IEnumerable<int> IdStationStatuses { get; set; }
         public bool Closed { get; set; }
     }
 }
