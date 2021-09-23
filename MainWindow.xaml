@@ -54,7 +54,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="5*" />
+                <RowDefinition Height="6*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0"  Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Franklin Gothic Heavy"  FontSize="33" FontWeight="Normal" TextWrapping="NoWrap" TextTrimming="None" LineStackingStrategy="MaxHeight">ESTADO DE ESTACIONES</TextBlock>

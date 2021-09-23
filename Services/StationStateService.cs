@@ -8,9 +8,9 @@ namespace dashboard.Service
 {
     public class StationStateService
     {
-        public StationState[] GetDummyStationStates()
+        public StationStatus[] GetDummyStationStates()
         {
-            StationState[] stationStates = new StationState[]
+            StationStatus[] stationStates = new StationStatus[]
             {
                 //new StationState() { Color = "OrangeRed", Station = "E1"},
                 //new StationState() { Color = "Green", Station = "E2"},
@@ -24,9 +24,9 @@ namespace dashboard.Service
             return stationStates;
         }
 
-        public IEnumerable<StationState> GetFromSlaveData(IEnumerable<SlaveData> slaveData)
+        public IEnumerable<StationStatus> GetFromSlaveData(IEnumerable<SlaveData> slaveData)
         {
-            List<StationState> stationStates = new List<StationState>();
+            List<StationStatus> stationStates = new List<StationStatus>();
 
             while (slaveData.Any(sD => !string.Concat(sD.Channel1, sD.Channel2, sD.Channel3).Equals("000")))
             {
@@ -40,7 +40,7 @@ namespace dashboard.Service
             return stationStates;
         }
 
-        private void AddStationStates(IEnumerable<SlaveData> slaveData, ref List<StationState> stationStates)
+        private void AddStationStates(IEnumerable<SlaveData> slaveData, ref List<StationStatus> stationStates)
         {
             var firstState = slaveData.Where(sD => !string.Concat(sD.Channel1, sD.Channel2, sD.Channel3).Equals("000")).OrderBy(sD => sD.DatStart).First();
             int slave = firstState.SlaveId;
@@ -53,11 +53,11 @@ namespace dashboard.Service
             var closedSlaveData = slaveData.FirstOrDefault(sD => sD.SlaveId == slave && sD.DatStart.Equals(actualState.DatEnd));
 
             bool closedState = closedSlaveData != null;
-            stationStates.Add(new StationState()
+            stationStates.Add(new StationStatus()
             {
                 Id = stationStates.Count + 1,
                 SlaveId = slave,
-                Station = slave.ToString(),
+                Station = actualState.Name,
                 DateStart = firstState.DatStart,
                 DateEnd = actualState.DatEnd,
                 Closed = closedState,
@@ -67,7 +67,7 @@ namespace dashboard.Service
             });
         }
 
-        public void InspectStationStates(ref IEnumerable<StationState> stationStates, ref IEnumerable<ScheduleStations> schedules)
+        public void InspectStationStates(ref IEnumerable<StationStatus> stationStates, ref IEnumerable<ScheduleStations> schedules)
         {
             foreach (var stationState in stationStates)
             {
@@ -82,7 +82,7 @@ namespace dashboard.Service
                 {
                     Closed = false,
                     IdStationStates = new List<int>(),
-                    StationStates = new List<StationState>()
+                    StationStates = new List<StationStatus>()
                 };
                 PreOrderStationStateFetch(stationStates.First(), ref schedule);
                 schedule.Closed = schedule.StationStates.All(sS => sS.Closed);
@@ -91,7 +91,7 @@ namespace dashboard.Service
             }
         }
 
-        private void PreOrderStationStateFetch(StationState stationState, ref ScheduleStations schedule)
+        private void PreOrderStationStateFetch(StationStatus stationState, ref ScheduleStations schedule)
         {
             if (schedule.IdStationStates.Contains(stationState.Id))
             {

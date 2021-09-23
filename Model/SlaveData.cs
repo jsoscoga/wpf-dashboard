@@ -14,6 +14,12 @@ namespace dashboard.Model
         [Column("slaveId")]
         public int SlaveId { get; set; }
 
+        [Column("name")]
+        public string Name { get; set; }
+
+        [Column("macId")]
+        public string MacId { get; set; }
+
         [Column("datStart")]
         public DateTime DatStart { get; set; }
 

@@ -106,6 +106,7 @@ namespace dashboard
                             Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateView(stationState.Station, stationState.TopVisibility, stationState.CenterVisibility, stationState.BottomVisibility)));
                         }
                     }
+                    Dispatcher.Invoke(() => StationStatePanel.Children.Cast<StationStateView>().FirstOrDefault(sSS => sSS.stationStateViewModel.Station.Equals("1")).stationStateViewModel.HigherVisibility = Visibility.Visible);
                 } else
                 {
                     countsViewModel.StationsStopTime = new DateTime(0);

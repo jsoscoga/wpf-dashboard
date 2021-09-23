@@ -17,11 +17,12 @@ namespace dashboard.Service
 
         public IReadOnlyList<SlaveData> GetByActualDate()
         {
-            string query = @"SELECT id,slaveId,datStart,datEnd,duration,channel1,channel2,channel3,channel4,error
-	            FROM dbo.slaveData 
-	            where datStart between @actualDate and @nextDate
-                and error = 0
-	            ORDER BY datStart";
+            string query = @"SELECT d.id,d.slaveId,dev.name,dev.macId,d.datStart,d.datEnd,d.duration,d.channel1,d.channel2,d.channel3,d.channel4,d.error
+                FROM dbo.slaveData d
+                LEFT JOIN slaveDevice dev ON dev.id = d.slaveId
+                WHERE d.datStart BETWEEN '2021-09-21' AND '2021-09-22'
+                AND d.error = 0
+                ORDER BY d.datStart";
 
             using (var connection = new SqlConnection(connectionString))
             {

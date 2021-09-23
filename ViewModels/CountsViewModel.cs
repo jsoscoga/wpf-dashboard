@@ -6,13 +6,13 @@ using System.Text;
 
 namespace dashboard
 {
-    sealed class CountsViewModel : INotifyPropertyChanged
+    public class CountsViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Counts counts;
 
-        private List<StationState> stationStates;
+        private List<StationStatus> stationStates;
 
         public decimal Plan { 
             get { return counts.Plan; }
@@ -73,7 +73,7 @@ namespace dashboard
             }
         }
 
-        public List<StationState> StationStates 
+        public List<StationStatus> StationStates 
         { 
             get => stationStates;
             set {

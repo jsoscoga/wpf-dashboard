@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 
 namespace dashboard.Model
 {
-    public class StationState
+    class StationState
     {
-        public int Id { get; set; }
         public string Station { get; set; }
-        public int SlaveId { get; set; }
-        public DateTime DateStart { get; set; }
-        public DateTime DateEnd { get; set; }
-        public bool Closed { get; set; }
-        public bool TopVisibility { get; set; }
-        public bool CenterVisibility { get; set; }
-        public bool BottomVisibility { get; set; }
-        public IEnumerable<StationState> ScopesStations { get; set; }
+        public Visibility HigherVisibility { get; set; }
+        public Visibility TopVisibility { get; set; }
+        public Visibility CenterVisibility { get; set; }
+        public Visibility BottomVisibility { get; set; }
     }
 }
