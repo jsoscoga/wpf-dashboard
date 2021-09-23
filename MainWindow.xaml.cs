@@ -93,17 +93,17 @@ namespace dashboard
                 Dispatcher.Invoke(() => StationStatePanel.Children.Clear());
                 if (schedules.Any(sD => !sD.Closed))
                 {
-                    var openStationStates = schedules.First(s => !s.Closed).StationStatuses;
-                    DateTime dateStart = openStationStates.Min(sD => sD.DateStart);
-                    DateTime dateEnd = openStationStates.Max(sD => sD.DateEnd);
+                    var openStationStatuses = schedules.First(s => !s.Closed).StationStatuses;
+                    DateTime dateStart = openStationStatuses.Min(sD => sD.DateStart);
+                    DateTime dateEnd = openStationStatuses.Max(sD => sD.DateEnd);
                     TimeSpan timeDiff = dateEnd - dateStart;
                     countsViewModel.StationsStopTime = new DateTime(timeDiff.Ticks);
 
-                    foreach (var stationState in openStationStates)
+                    foreach (var stationStatus in openStationStatuses)
                     {
-                        if (!stationState.Closed)
+                        if (!stationStatus.Closed)
                         {
-                            Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateView(stationState.Station, stationState.TopVisibility, stationState.CenterVisibility, stationState.BottomVisibility)));
+                            Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateView(stationStatus.Station, stationStatus.TopVisibility, stationStatus.CenterVisibility, stationStatus.BottomVisibility)));
                         }
                     }
                 } else
