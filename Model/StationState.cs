@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace dashboard.Model
 {
-    class StationState
+    public class StationState
     {
         public string Station { get; set; }
         public Visibility HigherVisibility { get; set; }

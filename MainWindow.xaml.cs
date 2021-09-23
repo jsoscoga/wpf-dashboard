@@ -27,6 +27,7 @@ namespace dashboard
     {
         private readonly OrderService _orderService;
         private readonly SlaveDataService _slaveDataService;
+        private readonly StationStateService _stationStateService;
         private readonly StationStatusService _stationStatusService;
 
         private Timer intervalUpdate;
@@ -36,10 +37,11 @@ namespace dashboard
 
         private CountsViewModel countsViewModel = new CountsViewModel();
 
-        public MainWindow(StationStatusService stationStatusService, OrderService orderService, SlaveDataService slaveDataService)
+        public MainWindow(StationStateService stationStateService, StationStatusService stationStatusService, OrderService orderService, SlaveDataService slaveDataService)
         {
             InitializeComponent();
 
+            _stationStateService = stationStateService;
             _stationStatusService = stationStatusService;
             _orderService = orderService;
             _slaveDataService = slaveDataService;
@@ -86,6 +88,13 @@ namespace dashboard
             countsViewModel.TotalStopTime = new DateTime(new TimeSpan(0, 0, totalDuration).Ticks);
 
             var stationStatuses = _stationStatusService.GetFromSlaveData(slaveData);
+            var stationStatusesGreen = _stationStateService.GetGreenFromSlaveData(slaveData);
+            ApplyingStationStateViewsColors(stationStatuses, stationStatusesGreen);
+
+            Dispatcher.Invoke(() => UpdatingText.Visibility = Visibility.Hidden);
+        }
+        private void ApplyingStationStateViewsColors(IEnumerable<StationStatus> stationStatuses, IEnumerable<StationState> stationStatusesGreen)
+        {
             if (stationStatuses.Any())
             {
                 IEnumerable<ScheduleStations> schedules = new List<ScheduleStations>();
@@ -106,16 +115,28 @@ namespace dashboard
                             Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateView(stationStatus.Station, stationStatus.TopVisibility, stationStatus.CenterVisibility, stationStatus.BottomVisibility)));
                         }
                     }
-                } else
+                }
+                else
                 {
                     countsViewModel.StationsStopTime = new DateTime(0);
                 }
-
-                //
-                //Dispatcher.Invoke(() => StationStatePanel.Children.Cast<StationStateView>().FirstOrDefault(sSS => sSS.stationStateViewModel.Station.Equals("1")).stationStateViewModel.HigherVisibility = Visibility.Visible);
             }
-
-            Dispatcher.Invoke(() => UpdatingText.Visibility = Visibility.Hidden);
+            if (stationStatusesGreen.Any())
+            {
+                foreach (var stationStatusGreen in stationStatusesGreen)
+                {
+                    StationStateView stationStateView = null;
+                    Dispatcher.Invoke(() => stationStateView = StationStatePanel.Children.Cast<StationStateView>().FirstOrDefault(sSV => sSV._stationStateViewModel.Station.Equals(stationStatusGreen.Station)));
+                    if (stationStateView == null)
+                    {
+                        Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateView(stationStatusGreen)));
+                    }
+                    else
+                    {
+                        Dispatcher.Invoke(() => stationStateView._stationStateViewModel.HigherVisibility = stationStatusGreen.HigherVisibility);
+                    }
+                }
+            }
         }
     }
 }

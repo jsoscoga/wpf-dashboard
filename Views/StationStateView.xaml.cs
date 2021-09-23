@@ -1,4 +1,5 @@
-﻿using dashboard.ViewModels;
+﻿using dashboard.Model;
+using dashboard.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,18 +20,36 @@ namespace dashboard.Views
     /// </summary>
     public partial class StationStateView : UserControl
     {
-        public StationStateViewModel stationStateViewModel;
+        public StationStateViewModel _stationStateViewModel;
+
+        public StationStateView(StationState stationState)
+        {
+            _stationStateViewModel = new StationStateViewModel()
+            {
+                Station = stationState.Station,
+                HigherVisibility = stationState.HigherVisibility,
+                TopVisibility = stationState.TopVisibility,
+                CenterVisibility = stationState.CenterVisibility,
+                BottomVisibility = stationState.BottomVisibility
+            };
+            InitializingComponent();
+        }
         public StationStateView(string station, bool topVisibility, bool centerVisibility, bool bottomVisibility)
         {
-            stationStateViewModel = new StationStateViewModel() {
+            _stationStateViewModel = new StationStateViewModel() {
                 Station = station,
                 HigherVisibility = StationStateViewModel.SetVisibility(false),
                 TopVisibility = StationStateViewModel.SetVisibility(topVisibility),
                 CenterVisibility = StationStateViewModel.SetVisibility(centerVisibility),
                 BottomVisibility = StationStateViewModel.SetVisibility(bottomVisibility)
             };
+            InitializingComponent();
+        }
+
+        public void InitializingComponent()
+        {
             InitializeComponent();
-            DataContext = stationStateViewModel;
+            DataContext = _stationStateViewModel;
         }
     }
 }

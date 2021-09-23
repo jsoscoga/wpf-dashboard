@@ -11,6 +11,7 @@ namespace dashboard
         public static void AddInfrastructure(this IServiceCollection services)
         {
             services.AddTransient<MainWindow>();
+            services.AddTransient<StationStateService>();
             services.AddTransient<StationStatusService>();
             services.AddTransient<OrderService>();
             services.AddTransient<SlaveDataService>();
