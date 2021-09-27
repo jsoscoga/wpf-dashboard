@@ -71,6 +71,7 @@ namespace dashboard
             if (_orderService.OrderExists())
             {
                 UpdatingCountsViewModel();
+                Dispatcher.Invoke(() => DataContext = countsViewModel);
             }
         }
 

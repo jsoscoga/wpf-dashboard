@@ -18,11 +18,8 @@ namespace dashboard
             get { return counts.Plan; }
             set
             {
-                if (counts.Plan != value)
-                {
-                    counts.Plan = value;
-                    OnPropertyChange("Plan");
-                }
+                counts.Plan = value;
+                OnPropertyChange("Plan");
             }
         }
         public DateTime TaktTime
@@ -30,33 +27,24 @@ namespace dashboard
             get { return counts.TaktTime; }
             set
             {
-                if (counts.TaktTime != value)
-                {
-                    counts.TaktTime = value;
-                    OnPropertyChange("TaktTime");
-                }
+                counts.TaktTime = value;
+                OnPropertyChange("TaktTime");
             }
         }
         public decimal Real { 
             get { return counts.Real; }
             set
             {
-                if (counts.Real != value)
-                {
-                    counts.Real = value;
-                    OnPropertyChange("Real");
-                }
+                counts.Real = value;
+                OnPropertyChange("Real");
             }
         }
         public DateTime TotalStopTime { 
             get { return counts.TotalStopTime; }
             set
             {
-                if (counts.TotalStopTime != value)
-                {
-                    counts.TotalStopTime = value;
-                    OnPropertyChange("TotalStopTime");
-                }
+                counts.TotalStopTime = value;
+                OnPropertyChange("TotalStopTime");
             }
         }
 
@@ -65,23 +53,18 @@ namespace dashboard
             get { return counts.StationsStopTime; }
             set
             {
-                if (counts.StationsStopTime != value)
-                {
-                    counts.StationsStopTime = value;
-                    OnPropertyChange("StationsStopTime");
-                }
+                counts.StationsStopTime = value;
+                OnPropertyChange("StationsStopTime");
             }
         }
 
         public List<StationStatus> StationStates 
         { 
             get => stationStates;
-            set {
-                if (stationStates != value)
-                {
-                    stationStates = value;
-                    OnPropertyChange("stationStates");
-                }
+            set
+            {
+                stationStates = value;
+                OnPropertyChange("stationStates");
             }
         }
 
