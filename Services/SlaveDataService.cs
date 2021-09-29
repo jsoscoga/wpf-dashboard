@@ -21,12 +21,13 @@ namespace dashboard.Service
                 FROM dbo.slaveData d
                 LEFT JOIN slaveDevice dev ON dev.id = d.slaveId
                 WHERE d.datStart BETWEEN @actualDate AND @nextDate
+                AND dev.macId in @macIds
                 AND d.error = 0
                 ORDER BY d.datStart";
 
             using (var connection = new SqlConnection(connectionString))
             {
-                var result = connection.Query<SlaveData>(query, new { actualDate = DateTime.Now.ToString("yyyy-MM-dd"), nextDate = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd") });
+                var result = connection.Query<SlaveData>(query, new { actualDate = DateTime.Now.ToString("yyyy-MM-dd"), nextDate = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd"), macIds = GetMacIds() });
                 return result.AsList();
             }
         }
