@@ -32,12 +32,10 @@ namespace dashboard
 
         private Timer intervalUpdate;
         private const decimal MINUTESSCHEDULE = 516;
-        // Interval of 30 seg is mandatory
-        private const int SECONDSFORINTERVAL = 10;
 
         private CountsViewModel countsViewModel = new CountsViewModel();
 
-        public MainWindow(StationStateService stationStateService, StationStatusService stationStatusService, OrderService orderService, SlaveDataService slaveDataService)
+        public MainWindow(IConfiguration configuration, StationStateService stationStateService, StationStatusService stationStatusService, OrderService orderService, SlaveDataService slaveDataService)
         {
             InitializeComponent();
 
@@ -46,10 +44,10 @@ namespace dashboard
             _orderService = orderService;
             _slaveDataService = slaveDataService;
 
-            InitializeData();
+            InitializeData(configuration);
         }
 
-        private void InitializeData()
+        private void InitializeData(IConfiguration configuration)
         {
             if (_orderService.OrderExists())
             {
@@ -59,7 +57,7 @@ namespace dashboard
 
             intervalUpdate = new Timer()
             {
-                Interval = SECONDSFORINTERVAL * 1000,
+                Interval = int.Parse(configuration["SecondsForInterval"]) * 1000,
                 Enabled = true,
                 AutoReset = true
             };
@@ -96,11 +94,11 @@ namespace dashboard
         }
         private void ApplyingStationStateViewsColors(IEnumerable<StationStatus> stationStatuses, IEnumerable<StationState> stationStatusesGreen)
         {
+            Dispatcher.Invoke(() => StationStatePanel.Children.Clear());
             if (stationStatuses.Any())
             {
                 IEnumerable<ScheduleStations> schedules = new List<ScheduleStations>();
                 _stationStatusService.InspectStationStatuses(ref stationStatuses, ref schedules);
-                Dispatcher.Invoke(() => StationStatePanel.Children.Clear());
                 if (schedules.Any(sD => !sD.Closed))
                 {
                     var openStationStatuses = schedules.First(s => !s.Closed).StationStatuses;

@@ -7,7 +7,7 @@
         xmlns:loc="clr-namespace:dashboard.Model"
         d:DataContext="{d:DesignInstance Type=dashboard:CountsViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="768" Width="1024"
+        Title="Dashboard for Smart Monitor" Height="768" Width="1024"
         WindowStartupLocation="CenterScreen" WindowState="Maximized"
         Background="Black">
     <Grid>
