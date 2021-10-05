@@ -9,7 +9,8 @@
         mc:Ignorable="d"
         Title="Dashboard for Smart Monitor" Height="768" Width="1024"
         WindowStartupLocation="CenterScreen" WindowState="Maximized"
-        Background="Black">
+        Background="Black"
+        Icon="./Resources/icon.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1.2*"/>

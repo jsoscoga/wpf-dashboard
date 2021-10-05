@@ -4,11 +4,13 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="appsettings.json" />
     <None Remove="logo.png" />
+    <None Remove="Resources\icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="NewFolder\" />
-    <Folder Include="Resources\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +35,7 @@
 
   <ItemGroup>
     <Resource Include="logo.png" />
+    <Resource Include="Resources\icon.ico" />
   </ItemGroup>
 
 </Project>
