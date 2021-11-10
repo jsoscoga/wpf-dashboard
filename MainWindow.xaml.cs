@@ -32,6 +32,8 @@ namespace dashboard
 
         private Timer intervalUpdate;
         private const decimal MINUTESSCHEDULE = 516;
+        private DateTime STARTSCHEDULE = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 6, 0, 0);
+        private DateTime ENDSCHEDULE = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1, 3, 0, 0);
 
         private CountsViewModel countsViewModel = new CountsViewModel();
 
@@ -49,12 +51,6 @@ namespace dashboard
 
         private void InitializeData(IConfiguration configuration)
         {
-            if (_orderService.OrderExists())
-            {
-                UpdatingCountsViewModel();
-                DataContext = countsViewModel;
-            }
-
             intervalUpdate = new Timer()
             {
                 Interval = int.Parse(configuration["SecondsForInterval"]) * 1000,
@@ -66,10 +62,20 @@ namespace dashboard
 
         private void OnIntervalElapsed(Object source, ElapsedEventArgs e)
         {
-            if (_orderService.OrderExists())
+            try
             {
-                UpdatingCountsViewModel();
-                Dispatcher.Invoke(() => DataContext = countsViewModel);
+                if (_orderService.OrderExists())
+                {
+                    UpdatingCountsViewModel();
+                    Dispatcher.Invoke(() => DataContext = countsViewModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error en el programa. --" + ex.Message, "Error en el dashboard", MessageBoxButton.OK);
+                intervalUpdate.Stop();
+                Application.Current.MainWindow.Close();
+
             }
         }
 
@@ -82,7 +88,7 @@ namespace dashboard
             countsViewModel.Real = order.RealSignals;
             countsViewModel.TaktTime = new DateTime(new TimeSpan(0, 0, (int)(MINUTESSCHEDULE / countsViewModel.Plan * 60)).Ticks);
 
-            var slaveData = _slaveDataService.GetByActualDate();
+            var slaveData = _slaveDataService.GetByDateTimeStartEnd(STARTSCHEDULE, ENDSCHEDULE);
             int totalDuration = _slaveDataService.GetDurationSum(slaveData);
             countsViewModel.TotalStopTime = new DateTime(new TimeSpan(0, 0, totalDuration).Ticks);
 

@@ -15,7 +15,7 @@ namespace dashboard.Service
         {
         }
 
-        public IReadOnlyList<SlaveData> GetByActualDate()
+        public IReadOnlyList<SlaveData> GetByDateTimeStartEnd(DateTime dateStart, DateTime dateEnd)
         {
             string query = @"SELECT d.id,d.slaveId,dev.name,dev.macId,d.datStart,d.datEnd,d.duration,d.channel1,d.channel2,d.channel3,d.channel4,d.error
                 FROM dbo.slaveData d
@@ -27,7 +27,7 @@ namespace dashboard.Service
 
             using (var connection = new SqlConnection(connectionString))
             {
-                var result = connection.Query<SlaveData>(query, new { actualDate = DateTime.Now.ToString("yyyy-MM-dd"), nextDate = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd"), macIds = GetMacIds() });
+                var result = connection.Query<SlaveData>(query, new { actualDate = dateStart.ToString("yyyy-MM-dd HH:mm:ss"), nextDate = dateEnd.ToString("yyyy-MM-dd HH:mm:ss"), macIds = GetMacIds() });
                 return result.AsList();
             }
         }

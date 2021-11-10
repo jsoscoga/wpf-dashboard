@@ -12,16 +12,16 @@
         <StackPanel Margin="10 0 0 0" Orientation="Vertical">
             <TextBlock Text="{Binding Station}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Franklin Gothic" FontStyle="Italic" FontSize="25" />
             <Border BorderBrush="PapayaWhip" BorderThickness="0.5">
-                <Frame x:Name="FrameHigher" BorderThickness="50 26 50 26" BorderBrush="Green" Visibility="{Binding HigherVisibility}" />
+                <Frame x:Name="FrameHigher" BorderThickness="60 26 60 26" BorderBrush="Green" Visibility="{Binding HigherVisibility}" />
             </Border>
             <Border BorderBrush="PapayaWhip" BorderThickness="0.5">
-                <Frame x:Name="FrameTop" BorderThickness="50 26 50 26" BorderBrush="Red" Visibility="{Binding TopVisibility}" />
+                <Frame x:Name="FrameTop" BorderThickness="60 26 60 26" BorderBrush="Red" Visibility="{Binding TopVisibility}" />
             </Border>
             <Border BorderBrush="PapayaWhip" BorderThickness="0.5">
-                <Frame x:Name="FrameCenter" BorderThickness="50 26 50 26" BorderBrush="Yellow" Visibility="{Binding CenterVisibility}" />
+                <Frame x:Name="FrameCenter" BorderThickness="60 26 60 26" BorderBrush="Yellow" Visibility="{Binding CenterVisibility}" />
             </Border>
             <Border BorderBrush="PapayaWhip" BorderThickness="0.5">
-                <Frame x:Name="FrameBottom" BorderThickness="50 26 50 26" BorderBrush="Blue" Visibility="{Binding BottomVisibility}" />
+                <Frame x:Name="FrameBottom" BorderThickness="60 26 60 26" BorderBrush="Blue" Visibility="{Binding BottomVisibility}" />
             </Border>
         </StackPanel>
     </Grid>
