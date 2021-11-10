@@ -18,11 +18,6 @@ namespace dashboard
     {
         public IServiceProvider ServiceProvider { get; private set; }
         public IConfiguration Configuration { get; set; }
-        
-        public App()
-        {
-            ShutdownMode = ShutdownMode.OnLastWindowClose;
-        }
 
         public App()
         {
@@ -30,7 +25,7 @@ namespace dashboard
         }
 
 
-    protected override void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
             ServiceCollection serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
