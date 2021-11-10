@@ -49,12 +49,6 @@ namespace dashboard
 
         private void InitializeData(IConfiguration configuration)
         {
-            if (_orderService.OrderExists())
-            {
-                UpdatingCountsViewModel();
-                DataContext = countsViewModel;
-            }
-
             intervalUpdate = new Timer()
             {
                 Interval = int.Parse(configuration["SecondsForInterval"]) * 1000,
@@ -66,10 +60,19 @@ namespace dashboard
 
         private void OnIntervalElapsed(Object source, ElapsedEventArgs e)
         {
-            if (_orderService.OrderExists())
+            try
             {
-                UpdatingCountsViewModel();
-                Dispatcher.Invoke(() => DataContext = countsViewModel);
+                if (_orderService.OrderExists())
+                {
+                    UpdatingCountsViewModel();
+                    Dispatcher.Invoke(() => DataContext = countsViewModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error en el programa. --" + ex.Message, "Error en el dashboard", MessageBoxButton.OK);
+                intervalUpdate.Stop();
+                Application.Current.MainWindow.Close();
             }
         }
 
