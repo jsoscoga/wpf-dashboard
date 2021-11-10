@@ -24,7 +24,13 @@ namespace dashboard
             ShutdownMode = ShutdownMode.OnLastWindowClose;
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        public App()
+        {
+            ShutdownMode = ShutdownMode.OnLastWindowClose;
+        }
+
+
+    protected override void OnStartup(StartupEventArgs e)
         {
             ServiceCollection serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
