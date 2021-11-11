@@ -18,11 +18,12 @@ namespace dashboard
     {
         public IServiceProvider ServiceProvider { get; private set; }
         public IConfiguration Configuration { get; set; }
-        
+
         public App()
         {
             ShutdownMode = ShutdownMode.OnLastWindowClose;
         }
+
 
         protected override void OnStartup(StartupEventArgs e)
         {
