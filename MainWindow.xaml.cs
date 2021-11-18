@@ -106,7 +106,7 @@ namespace dashboard
                 _stationStatusService.InspectStationStatuses(ref stationStatuses, ref schedules);
                 if (schedules.Any(sD => !sD.Closed))
                 {
-                    var openStationStatuses = schedules.First(s => !s.Closed).StationStatuses;
+                    var openStationStatuses = schedules.First(s => !s.Closed).StationStatuses.OrderBy(s => s.Station);
                     DateTime dateStart = openStationStatuses.Min(sD => sD.DateStart);
                     DateTime dateEnd = openStationStatuses.Max(sD => sD.DateEnd);
                     TimeSpan timeDiff = dateEnd - dateStart;
