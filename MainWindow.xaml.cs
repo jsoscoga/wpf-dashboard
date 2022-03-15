@@ -32,6 +32,7 @@ namespace dashboard
 
         private Timer intervalUpdate;
         private const decimal MINUTESSCHEDULE = 516;
+        private const decimal FIXEDAMOUNT = 50;
         private DateTime STARTSCHEDULE = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 6, 0, 0);
         private DateTime ENDSCHEDULE = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1, 3, 0, 0);
 
@@ -85,7 +86,7 @@ namespace dashboard
             var order = _orderService.GetActualOrder();
             countsViewModel.Plan = order.TargetAmount;
             countsViewModel.Real = order.RealSignals;
-            countsViewModel.TaktTime = new DateTime(new TimeSpan(0, 0, (int)(MINUTESSCHEDULE / countsViewModel.Plan * 60)).Ticks);
+            countsViewModel.TaktTime = new DateTime(new TimeSpan(0, 0, (int)(MINUTESSCHEDULE / FIXEDAMOUNT * 60)).Ticks);
 
             var slaveData = _slaveDataService.GetByDateTimeStartEnd(STARTSCHEDULE, ENDSCHEDULE);
             int totalDuration = _slaveDataService.GetDurationSum(slaveData);
@@ -94,6 +95,15 @@ namespace dashboard
             var stationStatuses = _stationStatusService.GetFromSlaveData(slaveData);
             var stationStatusesGreen = _stationStateService.GetGreenFromSlaveData(slaveData);
             ApplyingStationStateViewsColors(stationStatuses, stationStatusesGreen);
+
+            Dispatcher.Invoke(() => {
+                var sortedElements = StationStatePanel.Children.Cast<StationStateView>().OrderBy(sSV => sSV._stationStateViewModel.Station);
+                foreach (var element in sortedElements)
+                {
+                    StationStatePanel.Children.RemoveRange(0, 1);
+                    StationStatePanel.Children.Add(new StationStateView(element._stationStateViewModel.Station, element._stationStateViewModel.HigherVisibility, element._stationStateViewModel.TopVisibility, element._stationStateViewModel.CenterVisibility, element._stationStateViewModel.BottomVisibility));
+                }
+            });
 
             Dispatcher.Invoke(() => UpdatingText.Visibility = Visibility.Hidden);
         }
@@ -106,7 +116,7 @@ namespace dashboard
                 _stationStatusService.InspectStationStatuses(ref stationStatuses, ref schedules);
                 if (schedules.Any(sD => !sD.Closed))
                 {
-                    var openStationStatuses = schedules.First(s => !s.Closed).StationStatuses;
+                    var openStationStatuses = schedules.First(s => !s.Closed).StationStatuses.OrderBy(s => s.Station);
                     DateTime dateStart = openStationStatuses.Min(sD => sD.DateStart);
                     DateTime dateEnd = openStationStatuses.Max(sD => sD.DateEnd);
                     TimeSpan timeDiff = dateEnd - dateStart;
@@ -130,7 +140,9 @@ namespace dashboard
                 foreach (var stationStatusGreen in stationStatusesGreen)
                 {
                     StationStateView stationStateView = null;
-                    Dispatcher.Invoke(() => stationStateView = StationStatePanel.Children.Cast<StationStateView>().FirstOrDefault(sSV => sSV._stationStateViewModel.Station.Equals(stationStatusGreen.Station)));
+                    Dispatcher.Invoke(() => {
+                        stationStateView = StationStatePanel.Children.Cast<StationStateView>().FirstOrDefault(sSV => sSV._stationStateViewModel.Station.Equals(stationStatusGreen.Station));
+                    });
                     if (stationStateView == null)
                     {
                         Dispatcher.Invoke(() => StationStatePanel.Children.Add(new StationStateView(stationStatusGreen)));
