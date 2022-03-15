@@ -46,6 +46,19 @@ namespace dashboard.Views
             InitializingComponent();
         }
 
+        public StationStateView(string station, Visibility higherVisibility, Visibility topVisibility, Visibility centerVisibility, Visibility bottomVisibility)
+        {
+            _stationStateViewModel = new StationStateViewModel()
+            {
+                Station = station,
+                HigherVisibility = higherVisibility,
+                TopVisibility = topVisibility,
+                CenterVisibility = centerVisibility,
+                BottomVisibility = bottomVisibility,
+            };
+            InitializingComponent();
+        }
+
         public void InitializingComponent()
         {
             InitializeComponent();
